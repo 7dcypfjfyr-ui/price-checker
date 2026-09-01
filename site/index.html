@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Price Tracker</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <h1>Price Tracker</h1>
+  <p class="sub" id="generated">loading…</p>
+</header>
+
+<main id="grid" class="grid"></main>
+
+<template id="card-tpl">
+  <article class="card">
+    <div class="card-head">
+      <a class="label" target="_blank" rel="noopener"></a>
+      <span class="badge trend"></span>
+    </div>
+    <div class="price-row">
+      <span class="current"></span>
+      <span class="change"></span>
+    </div>
+    <svg class="spark" viewBox="0 0 320 80" preserveAspectRatio="none"></svg>
+    <dl class="stats"></dl>
+    <p class="err"></p>
+  </article>
+</template>
+
+<footer>
+  <p>Checked daily by GitHub Actions. Edit <code>data/products.json</code> or run the
+  workflow with an <code>add_url</code> input to track something new.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+name: check-prices
+
+on:
+  schedule:
+    - cron: "17 6 * * *"          # daily ~06:17 UTC
+  workflow_dispatch:
+    inputs:
+      add_url:
+        description: "Optional: a product URL to start tracking"
+        required: false
+        default: ""
+      label:
+        description: "Optional label for that URL"
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths:
+      - "data/products.json"
+      - "tracker/**"
+      - "site/index.html"
+      - "site/app.js"
+      - "site/style.css"
+      - ".github/workflows/check-prices.yml"
+
+permissions:
+  contents: write        # commit updated price history
+  pages: write           # publish the dashboard
+  id-token: write
+
+concurrency:
+  group: check-prices
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # don't loop on the bot's own history commits
+    if: >-
+      github.event_name != 'push' ||
+      github.event.head_commit.author.name != 'price-bot'
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Add URL (manual runs only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.add_url != '' }}
+        env:
+          ADD_URL: ${{ inputs.add_url }}
+          ADD_LABEL: ${{ inputs.label }}
+        run: python -m tracker.check add "$ADD_URL" --label "$ADD_LABEL" --no-check
+
+      - name: Check prices
+        run: python -m tracker.check run
+
+      - name: Commit updated history
+        run: |
+          git config user.name  "price-bot"
+          git config user.email "price-bot@users.noreply.github.com"
+          git add data/ site/dashboard.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "prices: $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
