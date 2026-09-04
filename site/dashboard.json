@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T01:13:30+00:00",
+  "generated": "2026-09-04T01:19:57+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -7,14 +7,14 @@
       "label": "Fazzoletto Floating Handkerchief Floor Lamp",
       "added": "2026-09-04T01:13:29+00:00",
       "stats": {
-        "data_points": 1,
+        "data_points": 2,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-09-04T01:13:30+00:00",
+        "last_checked": "2026-09-04T01:19:57+00:00",
         "current": 269.9,
-        "previous": null,
-        "change_abs": null,
-        "change_pct": null,
+        "previous": 269.9,
+        "change_abs": 0.0,
+        "change_pct": 0.0,
         "all_time_low": 269.9,
         "all_time_high": 269.9,
         "average": 269.9,
@@ -27,18 +27,23 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 1
+          "n": 2
         },
         "window_90d": {
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 1
+          "n": 2
         },
         "trend": "flat",
         "series": [
           {
             "date": "2026-09-04T01:13:30+00:00",
+            "price": 269.9,
+            "currency": "AUD"
+          },
+          {
+            "date": "2026-09-04T01:19:57+00:00",
             "price": 269.9,
             "currency": "AUD"
           }
