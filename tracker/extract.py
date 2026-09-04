@@ -314,28 +314,58 @@ def extract_from_html(html: str, rendered: bool = False) -> PriceResult:
 # --------------------------------------------------------------------------- #
 # public entry point
 # --------------------------------------------------------------------------- #
+def _render_once(pw, url: str) -> str | None:
+    browser = pw.chromium.launch(
+        headless=True,
+        args=[
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+        ],
+    )
+    try:
+        ctx = browser.new_context(
+            user_agent=UA, locale="en-US",
+            viewport={"width": 1280, "height": 2200},
+            timezone_id="Australia/Sydney",
+        )
+        ctx.add_init_script(
+            "Object.defineProperty(navigator,'webdriver',{get:()=>undefined});"
+        )
+        page = ctx.new_page()
+        # networkidle often never settles on heavy sites -> just wait for the DOM
+        page.goto(url, wait_until="domcontentloaded", timeout=40_000)
+        # give client JS a chance to inject price / JSON-LD
+        for _ in range(6):
+            page.wait_for_timeout(1000)
+            try:
+                has = page.evaluate(
+                    "!!document.querySelector('script[type*=\"ld+json\"]') "
+                    "|| !!document.querySelector('[itemprop=price],[data-price],meta[property*=\"price:amount\"]')"
+                )
+            except Exception:
+                has = False
+            if has:
+                page.wait_for_timeout(800)
+                break
+        return page.content()
+    finally:
+        browser.close()
+
+
 def _render_html(url: str) -> str | None:
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
         return None
-    try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
-            page = browser.new_context(
-                user_agent=UA, locale="en-US",
-                viewport={"width": 1280, "height": 2000},
-            ).new_page()
-            page.goto(url, wait_until="networkidle", timeout=45_000)
-            try:
-                page.wait_for_timeout(1500)
-            except Exception:
-                pass
-            html = page.content()
-            browser.close()
-            return html
-    except Exception:
-        return None
+    for attempt in range(2):
+        try:
+            with sync_playwright() as pw:
+                html = _render_once(pw, url)
+            if html and len(html) > 2000:
+                return html
+        except Exception:
+            pass
+    return None
 
 
 def check_url(url: str, min_confidence: float = 0.5,
