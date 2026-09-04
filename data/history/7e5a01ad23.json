@@ -8,5 +8,15 @@
     "rendered": true,
     "ok": true,
     "note": null
+  },
+  {
+    "date": "2026-09-04T02:49:54+00:00",
+    "price": null,
+    "currency": null,
+    "method": null,
+    "confidence": 0.0,
+    "rendered": false,
+    "ok": false,
+    "note": "no price-shaped value found"
   }
 ]
