@@ -1,8 +1,9 @@
 # Price Tracker
 
 Paste a product URL, and a GitHub Action checks its price once a day, appends it
-to a price history, and publishes a dashboard with stats (all-time low/high,
-average, median, % above the lowest ever, 30/90-day windows, trend, sparkline).
+to a price history, and publishes an interactive dashboard — per-product charts,
+all-time low/high, average, median, % above the lowest ever, 30/90-day windows,
+trend, target prices — plus an email when something drops.
 
 Nothing runs on your computer. GitHub Actions is the scheduler, the repo is the
 database, GitHub Pages is the dashboard. All on free tiers.
@@ -50,13 +51,27 @@ updates.
 
 ```json
 [
-  { "id": "any-unique-string", "url": "https://example.com/product/123", "label": "Cool Thing" }
+  { "id": "any-unique-string", "url": "https://example.com/product/123", "label": "Cool Thing", "target": 99.00 }
 ]
 ```
 
-(When the checker runs it fills in a proper `id`; you can leave it and it will be
-normalised. To remove something, delete its line here and its file in
-`data/history/`.)
+`target` is optional — the price you'd be happy to pay. When a check comes in at
+or below it you get an email (see below), and the dashboard flags the card.
+
+To remove something, delete its line here and its file in `data/history/`.
+
+## The dashboard
+
+`https://<you>.github.io/<repo>/` — refreshed after every check.
+
+- **Summary strip** — how many tracked, at an all-time low, at target, biggest recent drop, how many need attention.
+- **Sort & filter** — biggest drop, closest to target, furthest above all-time low, price, name, recently added.
+- **Cards** — current price, change since last check, a chart with the all-time-low line and your target line, key stats.
+- **Click a card** for the detail view — big interactive chart (hover for the price on any day, 30d / 90d / all ranges), every stat, the full price-history table, and a target-price editor.
+
+Setting a target in the dashboard saves it **in that browser only**. To make a
+target drive the email alert, put it in `data/products.json` (or use the
+`target` input when running the workflow, or `tracker.check target`).
 
 ## Running it locally (optional)
 
@@ -66,9 +81,11 @@ pip install -r requirements.txt
 python -m playwright install chromium
 
 python -m tracker.check once "https://example.com/product/123"   # one-off, prints JSON, saves nothing
-python -m tracker.check add  "https://example.com/product/123" --label "Cool Thing"
+python -m tracker.check add  "https://example.com/product/123" --label "Cool Thing" --target 99
+python -m tracker.check target <id-or-url> 89                     # set/change a target ('none' to clear)
 python -m tracker.check run                                      # check everything, append history
 python -m tracker.check build                                    # rebuild site/dashboard.json
+python -m tracker.check alerts                                   # print the alerts the last run would raise
 python -m http.server -d site 8777                               # view dashboard at localhost:8777
 ```
 
@@ -81,8 +98,9 @@ python -m http.server -d site 8777                               # view dashboar
 | `tracker/extract.py` | strategy stack + headless-browser fallback |
 | `tracker/priceparse.py` | messy-string → (amount, currency) |
 | `tracker/stats.py` | history → stats for the dashboard |
-| `tracker/check.py` | CLI: `add` / `list` / `remove` / `run` / `once` / `build` |
-| `data/products.json` | the URLs you track |
+| `tracker/alerts.py` | history → price-drop / target / failure alerts |
+| `tracker/check.py` | CLI: `add` / `target` / `list` / `remove` / `run` / `once` / `build` / `alerts` |
+| `data/products.json` | the URLs you track (and optional `target` prices) |
 | `data/history/<id>.json` | append-only price log per product (one file = small diffs, no merge conflicts) |
 | `site/` | static dashboard published to GitHub Pages |
 | `.github/workflows/check-prices.yml` | daily cron + commit history + deploy Pages |
@@ -96,5 +114,30 @@ python -m http.server -d site 8777                               # view dashboar
   wrong number, and the dashboard shows "last check failed". Sites with
   structured data (most Shopify stores, many big retailers) are very reliable.
 - Cron time is UTC and best-effort (GitHub may delay it under load).
-- Always-low prices, big drops, and trend are shown per card; there's no email
-  alert yet — easy to add in `check.py` if you want one.
+
+## Email alerts
+
+After each check the workflow runs `python -m tracker.check alerts`, which opens a
+GitHub Issue (→ email, because you watch your own repo) when:
+
+- **🎯 a target is hit** — the price reached the `target` set in `data/products.json`
+- **🔥 / 💰 a price drops** — the latest check is at least `ALERT_DROP_PCT` % below
+  the previous one (🔥 if it's also the lowest price ever seen)
+- **⚠️ a check keeps failing** — 3 checks in a row couldn't read a price (`ALERT_ON_FAIL`)
+
+Each fires only on the transition, so you get one email per event, not one a day.
+
+Tune it at the top of `.github/workflows/check-prices.yml`:
+
+```yaml
+env:
+  ALERT_DROP_PCT: "5"    # minimum % drop between checks to alert on
+  ALERT_ON_FAIL: "1"     # also alert after 3 straight failed checks for a product
+```
+
+Duplicate issues are suppressed (same title while still open). Close an issue
+once you've acted on it; a further drop opens a new one.
+
+**To actually receive the email:** on the repo page click **Watch → All Activity**
+(or **Custom → Issues**), and make sure email is on at
+<https://github.com/settings/notifications> under "Watching".

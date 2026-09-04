@@ -7,33 +7,144 @@
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header>
-  <h1>Price Tracker</h1>
-  <p class="sub" id="generated">loading…</p>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">₳</span>
+      <div>
+        <h1>Price Tracker</h1>
+        <p class="muted" id="updated">loading…</p>
+      </div>
+    </div>
+    <button class="btn ghost" id="add-btn" type="button">+ Track a product</button>
+  </div>
 </header>
+
+<section class="summary" id="summary" hidden></section>
+
+<div class="toolbar" id="toolbar" hidden>
+  <label class="field">
+    <span class="muted">Sort</span>
+    <select id="sort">
+      <option value="drop">Biggest drop</option>
+      <option value="target">Closest to target</option>
+      <option value="abovelow">Furthest above all-time low</option>
+      <option value="price-desc">Price: high → low</option>
+      <option value="price-asc">Price: low → high</option>
+      <option value="name">Name A–Z</option>
+      <option value="added">Recently added</option>
+    </select>
+  </label>
+  <input type="search" id="filter" placeholder="Filter by name…" class="field-input" />
+</div>
 
 <main id="grid" class="grid"></main>
 
+<footer class="foot">
+  <p class="muted">
+    Checked daily by GitHub Actions · <span id="foot-count"></span>
+    · <a id="repo-link" href="#" target="_blank" rel="noopener">repo</a>
+  </p>
+</footer>
+
+<!-- ---------- product card template ---------- -->
 <template id="card-tpl">
-  <article class="card">
-    <div class="card-head">
-      <a class="label" target="_blank" rel="noopener"></a>
-      <span class="badge trend"></span>
+  <article class="card" tabindex="0" role="button">
+    <div class="card-top">
+      <h2 class="card-title"></h2>
+      <span class="pill status"></span>
     </div>
-    <div class="price-row">
-      <span class="current"></span>
-      <span class="change"></span>
+    <div class="price-line">
+      <span class="price-now"></span>
+      <span class="delta"></span>
     </div>
-    <svg class="spark" viewBox="0 0 320 80" preserveAspectRatio="none"></svg>
-    <dl class="stats"></dl>
-    <p class="err"></p>
+    <div class="chart-wrap mini"></div>
+    <div class="card-foot">
+      <div class="mini-stat"><span class="muted">All-time low</span><b class="s-low"></b></div>
+      <div class="mini-stat"><span class="muted">Average</span><b class="s-avg"></b></div>
+      <div class="mini-stat target-stat"><span class="muted">Target</span><b class="s-target"></b></div>
+    </div>
+    <div class="abovebar" title="How far above the all-time low">
+      <span class="abovebar-fill"></span>
+    </div>
+    <p class="card-note" hidden></p>
   </article>
 </template>
 
-<footer>
-  <p>Checked daily by GitHub Actions. Edit <code>data/products.json</code> or run the
-  workflow with an <code>add_url</code> input to track something new.</p>
-</footer>
+<!-- ---------- detail dialog ---------- -->
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="d-title">
+    <button class="sheet-close" id="d-close" aria-label="Close">✕</button>
+    <div class="sheet-head">
+      <h2 id="d-title"></h2>
+      <a id="d-open" class="btn ghost sm" target="_blank" rel="noopener">Open product ↗</a>
+    </div>
+    <div class="sheet-price">
+      <span class="price-now" id="d-price"></span>
+      <span class="delta" id="d-delta"></span>
+      <span class="pill status" id="d-status"></span>
+    </div>
+
+    <div class="range" id="d-range">
+      <button data-days="30" type="button">30d</button>
+      <button data-days="90" type="button">90d</button>
+      <button data-days="0" class="on" type="button">All</button>
+    </div>
+    <div class="chart-wrap big" id="d-chart"></div>
+
+    <div class="d-grid">
+      <div><span class="muted">All-time low</span><b id="d-low"></b></div>
+      <div><span class="muted">All-time high</span><b id="d-high"></b></div>
+      <div><span class="muted">Average</span><b id="d-avg"></b></div>
+      <div><span class="muted">Median</span><b id="d-median"></b></div>
+      <div><span class="muted">Above low</span><b id="d-abovelow"></b></div>
+      <div><span class="muted">30-day range</span><b id="d-range30"></b></div>
+      <div><span class="muted">Data points</span><b id="d-points"></b></div>
+      <div><span class="muted">Tracking since</span><b id="d-since"></b></div>
+    </div>
+
+    <div class="target-box">
+      <label for="d-target-input"><b>Target price</b> — get alerted when it drops to this</label>
+      <div class="target-row">
+        <span class="cur-prefix" id="d-target-cur"></span>
+        <input type="number" id="d-target-input" min="0" step="0.01" inputmode="decimal" />
+        <button class="btn" id="d-target-save" type="button">Save</button>
+        <button class="btn ghost" id="d-target-clear" type="button">Clear</button>
+      </div>
+      <p class="muted sm" id="d-target-hint"></p>
+    </div>
+
+    <details class="history">
+      <summary>Full price history (<span id="d-hist-count"></span>)</summary>
+      <div class="table-scroll">
+        <table id="d-hist">
+          <thead><tr><th>Date</th><th>Price</th><th>Change</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ---------- add-product dialog ---------- -->
+<div class="overlay" id="add-overlay" hidden>
+  <div class="sheet narrow" role="dialog" aria-modal="true" aria-labelledby="a-title">
+    <button class="sheet-close" id="a-close" aria-label="Close">✕</button>
+    <h2 id="a-title">Track a new product</h2>
+    <p class="muted">There's no server, so adding happens in GitHub. Two ways:</p>
+    <ol class="how">
+      <li>
+        <b>Run the workflow</b> — paste the product URL into the <code>add_url</code> box:
+        <a id="a-workflow" class="btn" target="_blank" rel="noopener">Open workflow ↗</a>
+      </li>
+      <li>
+        <b>Edit the file</b> — add an entry to <code>data/products.json</code> and commit:
+        <a id="a-editfile" class="btn ghost" target="_blank" rel="noopener">Edit products.json ↗</a>
+        <pre id="a-snippet"></pre>
+      </li>
+    </ol>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>

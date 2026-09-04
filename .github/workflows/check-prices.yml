@@ -13,6 +13,10 @@ on:
         description: "Optional label for that URL"
         required: false
         default: ""
+      target:
+        description: "Optional target price (email alert when it drops to this)"
+        required: false
+        default: ""
   push:
     branches: [main]
     paths:
@@ -27,6 +31,13 @@ permissions:
   contents: write        # commit updated price history
   pages: write           # publish the dashboard
   id-token: write
+  issues: write          # open an issue (-> email) on a price drop
+
+env:
+  # alert when a check comes in >= this % below the previous check
+  ALERT_DROP_PCT: "5"
+  # set to "1" to also alert after 3 consecutive failed checks for a product
+  ALERT_ON_FAIL: "1"
 
 concurrency:
   group: check-prices
@@ -61,7 +72,8 @@ jobs:
         env:
           ADD_URL: ${{ inputs.add_url }}
           ADD_LABEL: ${{ inputs.label }}
-        run: python -m tracker.check add "$ADD_URL" --label "$ADD_LABEL" --no-check
+          ADD_TARGET: ${{ inputs.target }}
+        run: python -m tracker.check add "$ADD_URL" --label "$ADD_LABEL" --target "$ADD_TARGET" --no-check
 
       - name: Check prices
         run: python -m tracker.check run
@@ -84,3 +96,26 @@ jobs:
           path: site
       - id: deploy
         uses: actions/deploy-pages@v4
+
+      # non-blocking: a hiccup here must never fail the data pipeline above
+      - name: Open issues for price drops
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m tracker.check alerts > /tmp/alerts.json
+          n=$(jq 'length' /tmp/alerts.json)
+          echo "$n alert(s)"
+          if [ "$n" -gt 0 ]; then
+            gh label create price-drop --color BFD4F2 --description "Automated price alert" --force >/dev/null 2>&1 || true
+            existing=$(gh issue list --state open --label price-drop --limit 100 --json title --jq '.[].title' || true)
+            for i in $(seq 0 $((n - 1))); do
+              title=$(jq -r ".[$i].title" /tmp/alerts.json)
+              body=$(jq -r ".[$i].body" /tmp/alerts.json)
+              if printf '%s\n' "$existing" | grep -Fxq "$title"; then
+                echo "already open: $title"
+              else
+                gh issue create --title "$title" --body "$body" --label price-drop || echo "could not create: $title"
+              fi
+            done
+          fi

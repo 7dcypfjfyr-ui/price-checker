@@ -60,26 +60,70 @@ def append_history(pid: str, entry: dict) -> None:
     (HISTORY_DIR / f"{pid}.json").write_text(json.dumps(hist, indent=2) + "\n")
 
 
+def _parse_target(raw):
+    """'' -> keep, 'none'/'0'/'-' -> clear, number -> set."""
+    if raw is None or raw == "":
+        return ("keep", None)
+    if str(raw).strip().lower() in {"none", "0", "-", "clear"}:
+        return ("clear", None)
+    try:
+        return ("set", round(float(raw), 2))
+    except ValueError:
+        return ("keep", None)
+
+
 # --------------------------------------------------------------------------- #
 def cmd_add(args):
     url = args.url.strip()
     items = load_products()
     pid = _pid(url)
-    if any(it["id"] == pid for it in items):
-        print(f"already tracking: {pid}")
+    action, target = _parse_target(getattr(args, "target", None))
+    existing = next((it for it in items if it["id"] == pid), None)
+
+    if existing:
+        if action == "set":
+            existing["target"] = target
+            save_products(items)
+            print(f"already tracking {pid}; target set to {target}")
+        elif action == "clear":
+            existing.pop("target", None)
+            save_products(items)
+            print(f"already tracking {pid}; target cleared")
+        else:
+            print(f"already tracking: {pid}")
         return
-    items.append({
-        "id": pid,
-        "url": url,
-        "label": args.label or "",
-        "added": _now(),
-    })
+
+    entry = {"id": pid, "url": url, "label": args.label or "", "added": _now()}
+    if action == "set":
+        entry["target"] = target
+    items.append(entry)
     save_products(items)
-    print(f"added {pid}  {url}")
+    print(f"added {pid}  {url}" + (f"  (target {target})" if action == "set" else ""))
     if not args.no_check:
         _check_one({"id": pid, "url": url, "label": args.label or ""},
                    allow_render=not args.no_render)
         cmd_build(args)
+
+
+def cmd_target(args):
+    items = load_products()
+    key = args.product.strip()
+    it = next((x for x in items if x["id"] == key or x["url"] == key), None)
+    if not it:
+        print(f"not tracked: {key}  (use the id from `list` or the exact URL)")
+        return
+    action, target = _parse_target(args.price)
+    if action == "clear":
+        it.pop("target", None)
+        print(f"{it['id']} target cleared")
+    elif action == "set":
+        it["target"] = target
+        print(f"{it['id']} target = {target}")
+    else:
+        print(f"{it['id']} target is {it.get('target')}")
+        return
+    save_products(items)
+    cmd_build(args)
 
 
 def cmd_list(args):
@@ -161,6 +205,7 @@ def cmd_build(args):
             "url": it["url"],
             "label": it["label"] or it["url"],
             "added": it.get("added"),
+            "target": it.get("target"),
             "stats": s,
             "last_error": next(
                 (h["note"] for h in reversed(hist) if not h.get("ok")), None
@@ -171,15 +216,29 @@ def cmd_build(args):
     print(f"wrote {DASHBOARD_FILE.relative_to(ROOT)}  ({len(items)} products)")
 
 
+def cmd_alerts(args):
+    from .alerts import find_alerts
+    out = []
+    for it in load_products():
+        out.extend(find_alerts(it, load_history(it["id"])))
+    print(json.dumps(out, indent=2))
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="tracker.check")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     a = sub.add_parser("add"); a.add_argument("url")
     a.add_argument("--label", default="")
+    a.add_argument("--target", default="", help="alert when price drops to this; 'none' to clear")
     a.add_argument("--no-render", action="store_true")
     a.add_argument("--no-check", action="store_true")
     a.set_defaults(func=cmd_add)
+
+    a = sub.add_parser("target")
+    a.add_argument("product", help="product id (from `list`) or exact URL")
+    a.add_argument("price", nargs="?", default="", help="target price, or 'none' to clear")
+    a.set_defaults(func=cmd_target)
 
     a = sub.add_parser("list"); a.set_defaults(func=cmd_list)
 
@@ -195,6 +254,8 @@ def main(argv=None):
     a.set_defaults(func=cmd_once)
 
     a = sub.add_parser("build"); a.set_defaults(func=cmd_build)
+
+    a = sub.add_parser("alerts"); a.set_defaults(func=cmd_alerts)
 
     args = p.parse_args(argv)
     args.func(args)
