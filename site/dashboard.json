@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T02:01:53+00:00",
+  "generated": "2026-09-04T02:46:59+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -51,6 +51,52 @@
           {
             "date": "2026-09-04T02:01:53+00:00",
             "price": 269.9,
+            "currency": "AUD"
+          }
+        ]
+      },
+      "last_error": null
+    },
+    {
+      "id": "7e5a01ad23",
+      "url": "https://www.aliexpress.com/item/1005013020325111.html?currency=AUD&country=AU",
+      "label": "Picun F8 MAX2 ANC Headphones",
+      "added": "2026-09-04T02:46:45+00:00",
+      "target": null,
+      "stats": {
+        "data_points": 1,
+        "currency": "AUD",
+        "tracking_since": "2026-09-04T02:46:59+00:00",
+        "last_checked": "2026-09-04T02:46:59+00:00",
+        "current": 106.99,
+        "previous": null,
+        "change_abs": null,
+        "change_pct": null,
+        "all_time_low": 106.99,
+        "all_time_high": 106.99,
+        "average": 106.99,
+        "median": 106.99,
+        "stdev": 0.0,
+        "pct_above_all_time_low": 0.0,
+        "is_all_time_low": true,
+        "dropped_since_last": false,
+        "window_30d": {
+          "min": 106.99,
+          "max": 106.99,
+          "avg": 106.99,
+          "n": 1
+        },
+        "window_90d": {
+          "min": 106.99,
+          "max": 106.99,
+          "avg": 106.99,
+          "n": 1
+        },
+        "trend": "flat",
+        "series": [
+          {
+            "date": "2026-09-04T02:46:59+00:00",
+            "price": 106.99,
             "currency": "AUD"
           }
         ]

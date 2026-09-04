@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2026-09-04T02:46:59+00:00",
+    "price": 106.99,
+    "currency": "AUD",
+    "method": "json-ld:offers.price",
+    "confidence": 0.95,
+    "rendered": true,
+    "ok": true,
+    "note": null
+  }
+]
