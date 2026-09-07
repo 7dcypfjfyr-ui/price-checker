@@ -78,5 +78,15 @@
     "rendered": false,
     "ok": true,
     "note": null
+  },
+  {
+    "date": "2026-09-07T12:28:16+00:00",
+    "price": 269.9,
+    "currency": "AUD",
+    "method": "json-ld:offers.price",
+    "confidence": 0.95,
+    "rendered": false,
+    "ok": true,
+    "note": null
   }
 ]
