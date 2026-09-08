@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-07T12:28:27+00:00",
+  "generated": "2026-09-08T11:15:40+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -8,10 +8,10 @@
       "added": "2026-09-04T01:13:29+00:00",
       "target": null,
       "stats": {
-        "data_points": 9,
+        "data_points": 10,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-09-07T12:28:16+00:00",
+        "last_checked": "2026-09-08T11:15:30+00:00",
         "current": 269.9,
         "previous": 269.9,
         "change_abs": 0.0,
@@ -28,13 +28,13 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 9
+          "n": 10
         },
         "window_90d": {
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 9
+          "n": 10
         },
         "trend": "flat",
         "series": [
@@ -82,6 +82,11 @@
             "date": "2026-09-07T12:28:16+00:00",
             "price": 269.9,
             "currency": "AUD"
+          },
+          {
+            "date": "2026-09-08T11:15:30+00:00",
+            "price": 269.9,
+            "currency": "AUD"
           }
         ]
       },
@@ -94,33 +99,33 @@
       "added": "2026-09-04T02:46:45+00:00",
       "target": null,
       "stats": {
-        "data_points": 3,
+        "data_points": 4,
         "currency": "USD",
         "tracking_since": "2026-09-04T02:46:59+00:00",
-        "last_checked": "2026-09-07T12:28:27+00:00",
+        "last_checked": "2026-09-08T11:15:40+00:00",
         "current": 15.0,
         "previous": 15.0,
         "change_abs": 0.0,
         "change_pct": 0.0,
         "all_time_low": 15.0,
         "all_time_high": 106.99,
-        "average": 45.66,
+        "average": 38.0,
         "median": 15.0,
-        "stdev": 43.36,
+        "stdev": 39.83,
         "pct_above_all_time_low": 0.0,
         "is_all_time_low": true,
         "dropped_since_last": false,
         "window_30d": {
           "min": 15.0,
           "max": 106.99,
-          "avg": 45.66,
-          "n": 3
+          "avg": 38.0,
+          "n": 4
         },
         "window_90d": {
           "min": 15.0,
           "max": 106.99,
-          "avg": 45.66,
-          "n": 3
+          "avg": 38.0,
+          "n": 4
         },
         "trend": "falling",
         "series": [
@@ -136,6 +141,11 @@
           },
           {
             "date": "2026-09-07T12:28:27+00:00",
+            "price": 15.0,
+            "currency": "USD"
+          },
+          {
+            "date": "2026-09-08T11:15:40+00:00",
             "price": 15.0,
             "currency": "USD"
           }
