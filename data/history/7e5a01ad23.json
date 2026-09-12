@@ -108,5 +108,15 @@
     "rendered": false,
     "ok": false,
     "note": "no price-shaped value found"
+  },
+  {
+    "date": "2026-09-12T10:43:41+00:00",
+    "price": 14.58,
+    "currency": "USD",
+    "method": "text-heuristic",
+    "confidence": 0.53,
+    "rendered": true,
+    "ok": true,
+    "note": null
   }
 ]
