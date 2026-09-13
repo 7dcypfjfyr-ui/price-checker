@@ -118,5 +118,15 @@
     "rendered": true,
     "ok": true,
     "note": null
+  },
+  {
+    "date": "2026-09-13T11:48:40+00:00",
+    "price": 1.04,
+    "currency": "USD",
+    "method": "text-heuristic",
+    "confidence": 0.33,
+    "rendered": true,
+    "ok": true,
+    "note": null
   }
 ]
