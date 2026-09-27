@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-26T11:22:03+00:00",
+  "generated": "2026-09-27T11:59:43+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -8,10 +8,10 @@
       "added": "2026-09-04T01:13:29+00:00",
       "target": null,
       "stats": {
-        "data_points": 28,
+        "data_points": 29,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-09-26T11:21:51+00:00",
+        "last_checked": "2026-09-27T11:59:32+00:00",
         "current": 269.9,
         "previous": 269.9,
         "change_abs": 0.0,
@@ -28,13 +28,13 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 28
+          "n": 29
         },
         "window_90d": {
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 28
+          "n": 29
         },
         "trend": "flat",
         "series": [
@@ -177,6 +177,11 @@
             "date": "2026-09-26T11:21:51+00:00",
             "price": 269.9,
             "currency": "AUD"
+          },
+          {
+            "date": "2026-09-27T11:59:32+00:00",
+            "price": 269.9,
+            "currency": "AUD"
           }
         ]
       },
@@ -189,35 +194,35 @@
       "added": "2026-09-04T02:46:45+00:00",
       "target": null,
       "stats": {
-        "data_points": 14,
+        "data_points": 15,
         "currency": "USD",
         "tracking_since": "2026-09-04T02:46:59+00:00",
-        "last_checked": "2026-09-26T11:22:03+00:00",
-        "current": 1.04,
-        "previous": 10.74,
-        "change_abs": -9.7,
-        "change_pct": -90.32,
-        "all_time_low": 1.04,
+        "last_checked": "2026-09-27T11:59:43+00:00",
+        "current": 0.94,
+        "previous": 1.04,
+        "change_abs": -0.1,
+        "change_pct": -9.62,
+        "all_time_low": 0.94,
         "all_time_high": 106.99,
-        "average": 20.87,
+        "average": 19.54,
         "median": 15.0,
-        "stdev": 25.07,
+        "stdev": 24.72,
         "pct_above_all_time_low": 0.0,
         "is_all_time_low": true,
         "dropped_since_last": true,
         "window_30d": {
-          "min": 1.04,
+          "min": 0.94,
           "max": 106.99,
-          "avg": 20.87,
-          "n": 14
+          "avg": 19.54,
+          "n": 15
         },
         "window_90d": {
-          "min": 1.04,
+          "min": 0.94,
           "max": 106.99,
-          "avg": 20.87,
-          "n": 14
+          "avg": 19.54,
+          "n": 15
         },
-        "trend": "falling",
+        "trend": "rising",
         "series": [
           {
             "date": "2026-09-04T02:46:59+00:00",
@@ -287,6 +292,11 @@
           {
             "date": "2026-09-26T11:22:03+00:00",
             "price": 1.04,
+            "currency": "USD"
+          },
+          {
+            "date": "2026-09-27T11:59:43+00:00",
+            "price": 0.94,
             "currency": "USD"
           }
         ]
