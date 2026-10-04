@@ -328,5 +328,15 @@
     "rendered": false,
     "ok": false,
     "note": "no price-shaped value found"
+  },
+  {
+    "date": "2026-10-04T12:18:54+00:00",
+    "price": null,
+    "currency": null,
+    "method": null,
+    "confidence": 0.0,
+    "rendered": false,
+    "ok": false,
+    "note": "no price-shaped value found"
   }
 ]
