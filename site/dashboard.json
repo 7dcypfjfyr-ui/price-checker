@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-05T14:32:38+00:00",
+  "generated": "2026-10-06T13:16:27+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -8,10 +8,10 @@
       "added": "2026-09-04T01:13:29+00:00",
       "target": null,
       "stats": {
-        "data_points": 37,
+        "data_points": 38,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-10-05T14:32:28+00:00",
+        "last_checked": "2026-10-06T13:16:17+00:00",
         "current": 269.9,
         "previous": 269.9,
         "change_abs": 0.0,
@@ -34,7 +34,7 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 37
+          "n": 38
         },
         "trend": "flat",
         "series": [
@@ -222,6 +222,11 @@
             "date": "2026-10-05T14:32:28+00:00",
             "price": 269.9,
             "currency": "AUD"
+          },
+          {
+            "date": "2026-10-06T13:16:17+00:00",
+            "price": 269.9,
+            "currency": "AUD"
           }
         ]
       },
@@ -234,33 +239,33 @@
       "added": "2026-09-04T02:46:45+00:00",
       "target": null,
       "stats": {
-        "data_points": 17,
+        "data_points": 18,
         "currency": "USD",
         "tracking_since": "2026-09-04T02:46:59+00:00",
-        "last_checked": "2026-09-30T12:31:26+00:00",
-        "current": 1.04,
+        "last_checked": "2026-10-06T13:16:27+00:00",
+        "current": 15.0,
         "previous": 1.04,
-        "change_abs": 0.0,
-        "change_pct": 0.0,
+        "change_abs": 13.96,
+        "change_pct": 1342.31,
         "all_time_low": 0.94,
         "all_time_high": 106.99,
-        "average": 17.36,
+        "average": 17.23,
         "median": 15.0,
-        "stdev": 23.97,
-        "pct_above_all_time_low": 10.64,
+        "stdev": 23.3,
+        "pct_above_all_time_low": 1495.74,
         "is_all_time_low": false,
         "dropped_since_last": false,
         "window_30d": {
           "min": 0.94,
           "max": 35.0,
-          "avg": 11.55,
-          "n": 15
+          "avg": 11.76,
+          "n": 16
         },
         "window_90d": {
           "min": 0.94,
           "max": 106.99,
-          "avg": 17.36,
-          "n": 17
+          "avg": 17.23,
+          "n": 18
         },
         "trend": "falling",
         "series": [
@@ -348,10 +353,15 @@
             "date": "2026-09-30T12:31:26+00:00",
             "price": 1.04,
             "currency": "USD"
+          },
+          {
+            "date": "2026-10-06T13:16:27+00:00",
+            "price": 15.0,
+            "currency": "USD"
           }
         ]
       },
-      "last_error": "no price-shaped value found"
+      "last_error": null
     }
   ]
 }
