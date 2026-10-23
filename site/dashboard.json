@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-22T11:54:33+00:00",
+  "generated": "2026-10-23T11:44:18+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -8,10 +8,10 @@
       "added": "2026-09-04T01:13:29+00:00",
       "target": null,
       "stats": {
-        "data_points": 54,
+        "data_points": 55,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-10-22T11:54:25+00:00",
+        "last_checked": "2026-10-23T11:44:08+00:00",
         "current": 269.9,
         "previous": 269.9,
         "change_abs": 0.0,
@@ -34,7 +34,7 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 54
+          "n": 55
         },
         "trend": "flat",
         "series": [
@@ -307,6 +307,11 @@
             "date": "2026-10-22T11:54:25+00:00",
             "price": 269.9,
             "currency": "AUD"
+          },
+          {
+            "date": "2026-10-23T11:44:08+00:00",
+            "price": 269.9,
+            "currency": "AUD"
           }
         ]
       },
@@ -337,9 +342,9 @@
         "dropped_since_last": false,
         "window_30d": {
           "min": 0.94,
-          "max": 35.0,
-          "avg": 7.88,
-          "n": 13
+          "max": 15.0,
+          "avg": 5.62,
+          "n": 12
         },
         "window_90d": {
           "min": 0.94,
