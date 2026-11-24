@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-23T18:00:25+00:00",
+  "generated": "2026-11-24T17:38:47+00:00",
   "products": [
     {
       "id": "30ff9a3866",
@@ -8,10 +8,10 @@
       "added": "2026-09-04T01:13:29+00:00",
       "target": null,
       "stats": {
-        "data_points": 85,
+        "data_points": 86,
         "currency": "AUD",
         "tracking_since": "2026-09-04T01:13:30+00:00",
-        "last_checked": "2026-11-23T18:00:16+00:00",
+        "last_checked": "2026-11-24T17:38:35+00:00",
         "current": 269.9,
         "previous": 269.9,
         "change_abs": 0.0,
@@ -34,7 +34,7 @@
           "min": 269.9,
           "max": 269.9,
           "avg": 269.9,
-          "n": 85
+          "n": 86
         },
         "trend": "flat",
         "series": [
@@ -462,6 +462,11 @@
             "date": "2026-11-23T18:00:16+00:00",
             "price": 269.9,
             "currency": "AUD"
+          },
+          {
+            "date": "2026-11-24T17:38:35+00:00",
+            "price": 269.9,
+            "currency": "AUD"
           }
         ]
       },
@@ -696,7 +701,7 @@
           }
         ]
       },
-      "last_error": null
+      "last_error": "no price-shaped value found"
     }
   ]
 }
